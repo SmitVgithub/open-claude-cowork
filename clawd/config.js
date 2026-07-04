@@ -1,53 +1,56 @@
 export default {
-  agentId: 'clawd',
+  agentId: process.env.CLAWD_AGENT_ID || 'clawd',
 
   whatsapp: {
-    enabled: true,
-    allowedDMs: ['*'],  // fromMe check handles filtering
-    allowedGroups: [],           // group JIDs like '1234567890-1234567890@g.us'
-    respondToMentionsOnly: true  // for groups, only respond when mentioned
+    enabled: process.env.WHATSAPP_ENABLED === 'true',
+    allowedDMs: process.env.WHATSAPP_ALLOWED_DMS ? process.env.WHATSAPP_ALLOWED_DMS.split(',') : [],
+    allowedGroups: process.env.WHATSAPP_ALLOWED_GROUPS ? process.env.WHATSAPP_ALLOWED_GROUPS.split(',') : [],
+    respondToMentionsOnly: process.env.WHATSAPP_MENTIONS_ONLY !== 'false'
   },
 
   imessage: {
-    enabled: false,              // Set to true after signing into Messages.app
-    allowedDMs: ['*'],           // '*' allows all, or specific chat IDs
-    allowedGroups: [],           // group chat IDs
-    respondToMentionsOnly: true  // for groups, only respond when mentioned
+    enabled: process.env.IMESSAGE_ENABLED === 'true',
+    allowedDMs: process.env.IMESSAGE_ALLOWED_DMS ? process.env.IMESSAGE_ALLOWED_DMS.split(',') : [],
+    allowedGroups: process.env.IMESSAGE_ALLOWED_GROUPS ? process.env.IMESSAGE_ALLOWED_GROUPS.split(',') : [],
+    respondToMentionsOnly: process.env.IMESSAGE_MENTIONS_ONLY !== 'false'
   },
 
   telegram: {
-    enabled: false,              // Set to true and add bot token
-    token: '',                   // Get from @BotFather on Telegram
-    allowedDMs: ['*'],           // '*' allows all, or specific user IDs
-    allowedGroups: [],           // group chat IDs
-    respondToMentionsOnly: true  // for groups, only respond when @mentioned
+    enabled: process.env.TELEGRAM_ENABLED === 'true',
+    token: process.env.TELEGRAM_BOT_TOKEN || '',
+    allowedDMs: process.env.TELEGRAM_ALLOWED_DMS ? process.env.TELEGRAM_ALLOWED_DMS.split(',') : [],
+    allowedGroups: process.env.TELEGRAM_ALLOWED_GROUPS ? process.env.TELEGRAM_ALLOWED_GROUPS.split(',') : [],
+    respondToMentionsOnly: process.env.TELEGRAM_MENTIONS_ONLY !== 'false'
   },
 
   signal: {
-    enabled: false,              // Set to true after setting up signal-cli
-    phoneNumber: '',             // Your Signal phone number with country code (+1234567890)
-    signalCliPath: 'signal-cli', // Path to signal-cli binary
-    allowedDMs: ['*'],           // '*' allows all, or specific phone numbers
-    allowedGroups: [],           // group IDs
-    respondToMentionsOnly: true  // for groups, only respond when mentioned
+    enabled: process.env.SIGNAL_ENABLED === 'true',
+    phoneNumber: process.env.SIGNAL_PHONE_NUMBER || '',
+    signalCliPath: process.env.SIGNAL_CLI_PATH || 'signal-cli',
+    allowedDMs: process.env.SIGNAL_ALLOWED_DMS ? process.env.SIGNAL_ALLOWED_DMS.split(',') : [],
+    allowedGroups: process.env.SIGNAL_ALLOWED_GROUPS ? process.env.SIGNAL_ALLOWED_GROUPS.split(',') : [],
+    respondToMentionsOnly: process.env.SIGNAL_MENTIONS_ONLY !== 'false'
   },
 
   // Agent configuration
   agent: {
-    workspace: '~/clawd',        // Agent workspace directory
-    maxTurns: 50,                // Max tool-use turns per message
-    allowedTools: ['Read', 'Write', 'Edit', 'Bash', 'Glob', 'Grep']
+    workspace: process.env.CLAWD_WORKSPACE || '~/clawd',
+    maxTurns: parseInt(process.env.CLAWD_MAX_TURNS, 10) || 50,
+    allowedTools: process.env.CLAWD_ALLOWED_TOOLS 
+      ? process.env.CLAWD_ALLOWED_TOOLS.split(',') 
+      : ['Read', 'Glob', 'Grep']  // Safe defaults - no Write, Edit, or Bash
   },
 
   browser: {
-    enabled: true,
-    mode: 'clawd',
+    enabled: process.env.BROWSER_ENABLED === 'true',
+    mode: process.env.BROWSER_MODE || 'clawd',
     clawd: {
-      userDataDir: '~/.clawd-browser-profile',
-      headless: false
+      userDataDir: process.env.BROWSER_USER_DATA_DIR || '~/.clawd-browser-profile',
+      headless: process.env.BROWSER_HEADLESS === 'true'
     },
     chrome: {
-      profilePath: '',
-      cdpPort: 9222
+      profilePath: process.env.CHROME_PROFILE_PATH || '',
+      cdpPort: parseInt(process.env.CHROME_CDP_PORT, 10) || 9222
     }
-  }}
+  }
+}
