@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-const SERVER_URL = 'http://localhost:3001';
+// Server URL should be configured via environment variable, defaulting to secure HTTPS
+const SERVER_URL = process.env.SERVER_URL || 'https://localhost:3001';
 
 // Store the current abort controller for cancelling requests
 let currentAbortController = null;
